@@ -8,9 +8,9 @@ phases:
       - chmod +x ./kubectl 
       - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
       - echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-      - aws eks update-kubeconfig --name portfolio_kohbe_cluster --region ap-northeast-2
+      - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region ap-northeast-2
   pre_build:
-    commands:
+    commands: 
       - echo [ Logging ] Amazon ECR...
       - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
   build:
