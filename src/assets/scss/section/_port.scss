@@ -29,13 +29,16 @@
         display: flex;
         flex-wrap: wrap;
         width: 7000px;
+        padding-left: 40px;
 
         .port__item {
             width: 500px;
-            height: 70vh;
+            height: 80vh;
             background-color: var(--subBg100);
             padding: 2.5rem;
             margin-right: 20px;
+            margin-left: 20px;
+            font-weight: 700;
 
             &.p1 {
                 background-color: var(--subBg100);
@@ -95,7 +98,7 @@
                 text-align: center;
                 padding: 0.8rem 0;
                 font-weight: 700;
-                color: var(--black100);
+                color: var(--black);
                 border-bottom: 2px solid var(--black100);
                 margin-bottom: 1rem;
             }

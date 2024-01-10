@@ -1,0 +1,28 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.24.17/2023-11-14/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl 
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+      - echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+      - aws eks update-kubeconfig --name portfolio_kohbe_cluster --region ap-northeast-2
+  pre_build:
+    commands:
+      - echo [ Logging ] Amazon ECR...
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
+  build:
+    commands:
+      - echo [ Building ] npm install ...
+      - npm install
+      - npm run build
+      - echo [ Building ] Docker Image ...
+      - docker build -t cicd-ecr .
+      - docker tag cicd-ecr:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/cicd-ecr:latest
+      - docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/cicd-ecr:latest 
+  post_build:
+    commands:
+      - kubectl apply -f deployment.yaml 
+      - kubectl apply -f service.yaml
